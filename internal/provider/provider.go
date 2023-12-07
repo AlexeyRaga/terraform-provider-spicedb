@@ -115,6 +115,7 @@ func (p *SpiceDBProvider) Configure(ctx context.Context, req provider.ConfigureR
 func (p *SpiceDBProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewSchemaResource,
+		NewRelationshipResource,
 	}
 }
 
