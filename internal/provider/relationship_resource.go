@@ -205,11 +205,16 @@ func (r *RelationshipResource) relationshipFilter(rel *authproto.Relationship) *
 	return filter
 }
 
-func (r *RelationshipResource) hasRelationship(ctx context.Context, rel *authproto.Relationship) (bool, error) {
+func (r *RelationshipResource) hasRelationship(ctx context.Context, resp *resource.ReadResponse, rel *authproto.Relationship) (bool, error) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
 	stream, err := r.client.PermissionsServiceClient.ReadRelationships(ctx, &authproto.ReadRelationshipsRequest{
+		Consistency: &authproto.Consistency{
+			Requirement: &authproto.Consistency_FullyConsistent{
+				FullyConsistent: true,
+			},
+		},
 		RelationshipFilter: r.relationshipFilter(rel),
 	})
 
@@ -217,10 +222,16 @@ func (r *RelationshipResource) hasRelationship(ctx context.Context, rel *authpro
 		return false, err
 	}
 
-	for _, err := stream.Recv(); err != io.EOF; {
+
+	for {
+		r, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
 		if err != nil {
 			return false, err
-		} else {
+		}
+		if r != nil {
 			return true, nil
 		}
 	}
