@@ -102,7 +102,7 @@ func (r *RelationshipResource) Create(ctx context.Context, req resource.CreateRe
 	_, err = r.client.WriteRelationships(ctx, &authproto.WriteRelationshipsRequest{
 		Updates: []*authproto.RelationshipUpdate{
 			{
-				Operation:    authproto.RelationshipUpdate_OPERATION_CREATE,
+				Operation:    authproto.RelationshipUpdate_OPERATION_TOUCH,
 				Relationship: rel,
 			},
 		},
