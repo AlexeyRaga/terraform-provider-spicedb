@@ -205,7 +205,7 @@ func (r *RelationshipResource) relationshipFilter(rel *authproto.Relationship) *
 	return filter
 }
 
-func (r *RelationshipResource) hasRelationship(ctx context.Context, resp *resource.ReadResponse, rel *authproto.Relationship) (bool, error) {
+func (r *RelationshipResource) hasRelationship(ctx context.Context, rel *authproto.Relationship) (bool, error) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -221,7 +221,6 @@ func (r *RelationshipResource) hasRelationship(ctx context.Context, resp *resour
 	if err != nil {
 		return false, err
 	}
-
 
 	for {
 		r, err := stream.Recv()
